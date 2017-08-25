@@ -30,9 +30,9 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\OneSyncSvc" /v Sta
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\lfsvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MapsBroker" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\dmwappushservice" /v Start /d 4 /t "REG_DWORD" /f
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\DPS" /v Start /d 4 /t "REG_DWORD" /f
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdiServiceHost" /v Start /d 4 /t "REG_DWORD" /f
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdiSystemHost" /v Start /d 4 /t "REG_DWORD" /f
+set-service DPS -startuptype Disabled
+set-service WdiServiceHost -startuptype Disabled
+set-service WdiSystemHost -startuptype Disabled
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\PimIndexMaintenanceSvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\MessagingService" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wscsvc" /v Start /d 4 /t "REG_DWORD" /f
@@ -51,6 +51,7 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ScDeviceEnum" /v S
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SCPolicySvc" /v Start /d 4 /t "REG_DWORD" /f
 
 #Office promt
+cls
 write-host 'Do you use Microsoft Office and printing?'
 write-host '1 = no'
 write-host '2 = yes, i do use / will use Microsoft Office and printing'
@@ -72,6 +73,7 @@ default {Write-Host 'Incorrect input' -ForegroundColor Red}
 
 
 #SMB v1 promt
+cls
 write-host 'Do you want SMB v1 disabled? Note that serving files to older linux and OS X based OSes can be troubling'
 write-host '1 = No, I serve files to older linux and OS X clients'
 write-host '2 = Yes, I want SMB v1 disabled (more security against ransomware)'
