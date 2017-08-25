@@ -361,10 +361,10 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v "Aut
 #Do not send Windows Media Player statistics 
 reg add "HKCU\SOFTWARE\Microsoft\MediaPlayer\Preferences" /v "UsageTracking" /t REG_DWORD /d 0 /f 
 
+#Set default PhotoViewer
 cls
 Write-Host "Setting Photo Viewer as default photo app"
-Start-Sleep 2;
-#Set default PhotoViewer 
+Start-Sleep 3; 
 reg add "HKCU\SOFTWARE\Classes\.ico" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f 
 reg add "HKCU\SOFTWARE\Classes\.tiff" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f 
 reg add "HKCU\SOFTWARE\Classes\.bmp" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f 
@@ -375,7 +375,8 @@ reg add "HKCU\SOFTWARE\Classes\.jpg" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tif
 
 cls
 Write-Host "Miscellaneous - show hidden files etc."
-Start-Sleep 2;
+Start-Sleep 3;
+
 #Turn off "You have new apps that can open this type of file" alert 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "NoNewAppAlert" /t REG_DWORD /d 1 /f 
 
@@ -437,24 +438,33 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Policies" /v "LongPathsEnabled" /t REG_DW
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v LaunchTo /d 1 /t "REG_DWORD" /f
 
 #Set UAC
+cls
+Write-Host "Change UAC to your preference"
+Start-Sleep 1;
 C:\Windows\System32\UserAccountControlSettings.exe
+Start-Sleep 3;
 
+
+#Disable multicast - DNS client
 cls
 Write-Host "Disabling multicast - DNS client"
-Start-Sleep 2;
-#Disable multicast - DNS client
+Start-Sleep 3;
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /v EnableMulticast /d 0 /t "REG_DWORD" /f
 
 
 
 #Power setting
+cls
+Write-Host "Setting 'High Performance' power plan and no monitor timeout"
+Start-Sleep 3;
 powercfg /SETACTIVE 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 powercfg -change -monitor-timeout-ac 0
 
+
+#Remove the Windows 10 Shit in Windows Firewall
 cls
 Write-Host "Removing default firewall rules for the Windows 10 apps"
-Start-Sleep 2;
-#Block the Windows 10 Shit in firewall
+Start-Sleep 3;
 Get-NetFirewallRule | Where { $_.Group -like '*@{*' } | Remove-NetFirewallRule
 Get-NetFirewallRule | Where { $_.Group -eq 'DiagTrack' } | Remove-NetFirewallRule
 Get-NetFirewallRule | Where { $_.DisplayGroup -eq 'Delivery Optimization' } | Remove-NetFirewallRule
@@ -471,7 +481,7 @@ Get-NetFirewallRule | Where { $_.Group -like 'Cortana*' } | Remove-NetFirewallRu
 #Deativate SeachUI / Cortana
 cls
 Write-Host "Disabling SearchUI / Cortana"
-Start-Sleep 2;
+Start-Sleep 3;
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WSearch" /v Start /d 4 /t "REG_DWORD" /f
 cd C:\Windows\SystemApps
 cmd.exe /c takeown /f "*" /r /d y 
@@ -483,7 +493,8 @@ move-item ".\Microsoft*" ".\killed"
 
 cls
 Write-Host "The following script is J. G. Spiers"
-Start-Sleep 3;
+Write-Host "http://www.jgspiers.com/windows-server-2016-optimisation-script/"
+Start-Sleep 5;
 
 #following script is J G Spiers - http://www.jgspiers.com/windows-server-2016-optimisation-script/
 
