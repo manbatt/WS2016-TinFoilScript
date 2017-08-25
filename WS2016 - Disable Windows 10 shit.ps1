@@ -96,6 +96,14 @@ default {Write-Host 'Incorrect input' -ForegroundColor Red}
 
 }
 
+
+#Disable Teredo
+cls
+Write-Host "Disabling Teredo"
+Start-Sleep 3
+netsh interface teredo set state disabled
+
+
 #Windows Defender services - deactivate
 cls
 Write-Host "Disabling Windows Defender";
