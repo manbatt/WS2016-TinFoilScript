@@ -40,7 +40,6 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\OneSyncSvc" /v Sta
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UserDataSvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wcncsvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\upnphost" /v Start /d 4 /t "REG_DWORD" /f
-
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\wisvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\icssvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\AppXSvc" /v Start /d 4 /t "REG_DWORD" /f
@@ -51,16 +50,49 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Themes" /v Start /
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ScDeviceEnum" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SCPolicySvc" /v Start /d 4 /t "REG_DWORD" /f
 
+#Office promt
+write-host 'Do you use Microsoft Office and printing?'
+write-host '1 = no'
+write-host '2 = yes, i do use / will use Microsoft Office and printing'
 
-#Print spooler
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" /v Start /d 4 /t "REG_DWORD" /f
+$selected_menu_item = Read-Host 'Select menu item'
 
+Switch($selected_menu_item){
 
-#these break Office applications (clipsvc handles the software licenseing, office helper service depends on it)!
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\sppsvc" /v Start /d 4 /t "REG_DWORD" /f
+1{reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\sppsvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ClipSVC" /v Start /d 4 /t "REG_DWORD" /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" /v Start /d 4 /t "REG_DWORD" /f}
+
+2{Write-Host "Continuing"
+Start-Sleep 2}
+
+default {Write-Host 'Incorrect input' -ForegroundColor Red}
+
+}
 
 
+#SMB v1 promt
+write-host 'Do you want SMB v1 disabled? Note that serving files to older linux and OS X based OSes can be troubling'
+write-host '1 = No, I serve files to older linux and OS X clients'
+write-host '2 = Yes, I want SMB v1 disabled (more security against ransomware)'
+write-host 'Information on disabling SMB v1 and enabling SMB v2 on linux: https://www.cyberciti.biz/faq/how-to-configure-samba-to-use-smbv2-and-disable-smbv1-on-linux-or-unix/'
+
+$selected_menu_item = Read-Host 'Select menu item'
+
+Switch($selected_menu_item){
+
+1{cls
+Start-Sleep 2
+Write-Host "Continuing"}
+
+2{cls
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 0 -Force
+Write-Host "Disabling SMB v1"
+Start-Sleep 2}
+
+default {Write-Host 'Incorrect input' -ForegroundColor Red}
+
+}
 
 #Windows Defender services - deactivate
 cls
