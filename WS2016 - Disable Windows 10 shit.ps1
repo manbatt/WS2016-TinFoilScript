@@ -1,7 +1,8 @@
 #For Server 2016 and Windows 10 Enterprise LTSB and LTSB N ONLY - will break some desktop services - activate spooler service, if you need printing functionality
 #kill nasty services. Why does they even exist?
+cls
 Write-Host "Disabling Windows 10 services"
-Start-Sleep 1;
+Start-Sleep 3;
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ajrouter" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\cdpsvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\cdpusersvc" /v Start /d 4 /t "REG_DWORD" /f
@@ -51,18 +52,20 @@ reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ScDeviceEnum" /v S
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\SCPolicySvc" /v Start /d 4 /t "REG_DWORD" /f
 
 
-
 #Print spooler
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" /v Start /d 4 /t "REG_DWORD" /f
-
 
 
 #these break Office applications (clipsvc handles the software licenseing, office helper service depends on it)!
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\sppsvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ClipSVC" /v Start /d 4 /t "REG_DWORD" /f
+
+
+
 #Windows Defender services - deactivate
+cls
 Write-Host "Disabling Windows Defender";
-Start-Sleep 1;
+Start-Sleep 3;
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d 1 /f 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableBehaviorMonitoring" /t REG_DWORD /d 1 /f 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender\Real-Time Protection" /v "DisableOnAccessProtection" /t REG_DWORD /d 1 /f 
@@ -91,6 +94,9 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpywar
 
 
 #Privacy
+cls
+Write-Host "Disabling Windows 10 analytics and telemetry"
+Start-Sleep 3;
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v AllowCortana /d 0 /t "REG_DWORD" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v AllowTelemetry /d 0 /t "REG_DWORD" /f
 
@@ -355,8 +361,9 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v "Aut
 #Do not send Windows Media Player statistics 
 reg add "HKCU\SOFTWARE\Microsoft\MediaPlayer\Preferences" /v "UsageTracking" /t REG_DWORD /d 0 /f 
 
-
-
+cls
+Write-Host "Setting Photo Viewer as default photo app"
+Start-Sleep 2;
 #Set default PhotoViewer 
 reg add "HKCU\SOFTWARE\Classes\.ico" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f 
 reg add "HKCU\SOFTWARE\Classes\.tiff" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f 
@@ -366,7 +373,9 @@ reg add "HKCU\SOFTWARE\Classes\.gif" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tif
 reg add "HKCU\SOFTWARE\Classes\.jpeg" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f 
 reg add "HKCU\SOFTWARE\Classes\.jpg" /ve /t REG_SZ /d "PhotoViewer.FileAssoc.Tiff" /f 
 
-
+cls
+Write-Host "Miscellaneous - show hidden files etc."
+Start-Sleep 2;
 #Turn off "You have new apps that can open this type of file" alert 
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "NoNewAppAlert" /t REG_DWORD /d 1 /f 
 
@@ -430,6 +439,9 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 #Set UAC
 C:\Windows\System32\UserAccountControlSettings.exe
 
+cls
+Write-Host "Disabling multicast - DNS client"
+Start-Sleep 2;
 #Disable multicast - DNS client
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /v EnableMulticast /d 0 /t "REG_DWORD" /f
 
@@ -439,7 +451,9 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" /v EnableMultica
 powercfg /SETACTIVE 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 powercfg -change -monitor-timeout-ac 0
 
-
+cls
+Write-Host "Removing default firewall rules for the Windows 10 apps"
+Start-Sleep 2;
 #Block the Windows 10 Shit in firewall
 Get-NetFirewallRule | Where { $_.Group -like '*@{*' } | Remove-NetFirewallRule
 Get-NetFirewallRule | Where { $_.Group -eq 'DiagTrack' } | Remove-NetFirewallRule
@@ -455,6 +469,9 @@ Get-NetFirewallRule | Where { $_.Group -like 'Cortana*' } | Remove-NetFirewallRu
 
 
 #Deativate SeachUI / Cortana
+cls
+Write-Host "Disabling SearchUI / Cortana"
+Start-Sleep 2;
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WSearch" /v Start /d 4 /t "REG_DWORD" /f
 cd C:\Windows\SystemApps
 cmd.exe /c takeown /f "*" /r /d y 
@@ -464,6 +481,9 @@ taskkill /f /im SearchUI.exe
 taskkill /f /im searchindexer.exe
 move-item ".\Microsoft*" ".\killed"
 
+cls
+Write-Host "The following script is J. G. Spiers"
+Start-Sleep 3;
 
 #following script is J G Spiers - http://www.jgspiers.com/windows-server-2016-optimisation-script/
 
