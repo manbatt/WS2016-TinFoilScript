@@ -62,9 +62,14 @@ Switch($selected_menu_item){
 
 1{reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\sppsvc" /v Start /d 4 /t "REG_DWORD" /f
 reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ClipSVC" /v Start /d 4 /t "REG_DWORD" /f
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" /v Start /d 4 /t "REG_DWORD" /f}
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" /v Start /d 4 /t "REG_DWORD" /f
+Write-Host "Disabling sppsvc, ClipSVC and Spooler"
+Start-Sleep 2}
 
-2{Write-Host "Continuing"
+2{reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\sppsvc" /v Start /d 1 /t "REG_DWORD" /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\ClipSVC" /v Start /d 1 /t "REG_DWORD" /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Spooler" /v Start /d 1 /t "REG_DWORD" /f
+Write-Host "Enabling sppsvc, ClipSVC and Spooler"
 Start-Sleep 2}
 
 default {Write-Host 'Incorrect input' -ForegroundColor Red}
@@ -84,8 +89,9 @@ $selected_menu_item = Read-Host 'Select menu item'
 Switch($selected_menu_item){
 
 1{cls
-Start-Sleep 2
-Write-Host "Continuing"}
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 1 -Force
+Write-Host "Enabing SMB v1"
+Start-Sleep 2}
 
 2{cls
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 0 -Force
